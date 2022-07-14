@@ -1,23 +1,23 @@
-use con_book::*;
-use std::{
-    io::*
-};
 use colored::*;
+use con_book::*;
+use std::io::*;
 
 fn main() {
-
     println!("{}", "\nContact book!\n".bright_green().bold());
     let mut contact_book = ContactBook::new();
 
     loop {
-
-        println!("{}","
+        println!(
+            "{}",
+            "
 Options:
 1. Add contact
 2. Delete contact 
 3. List contacts
-        ".bold());
-        println!("{}","Enter option: ".bold());
+        "
+            .bold()
+        );
+        println!("{}", "Enter option: ".bold());
 
         let mut input = String::new();
 
@@ -77,25 +77,25 @@ Options:
                 let contact = Contact::new(name, number, email);
                 match contact_book.add(contact) {
                     Ok(i) => {
-                        println!("{}", "\nSuccessfully added contact"
-                            .bright_green());
+                        println!("{}", "\nSuccessfully added contact".bright_green());
                         i
-                    },
+                    }
                     Err(error) => {
                         println!("{}", format!("Error: {}", error).red());
                         continue;
                     }
                 };
-                
-            },
+            }
             "2" => {
                 let mut input2 = String::new();
 
-                println!("\nRemove contact by: 
+                println!(
+                    "\nRemove contact by: 
 1. Name
 2. Number
 3. Email
-                ");
+                "
+                );
 
                 println!("Option: ");
 
@@ -125,7 +125,7 @@ Options:
                             println!("{}", "\nDoesn't exist".red());
                         });
                         println!("{}", "Successfully deleted".bright_green());
-                    },
+                    }
                     "2" => {
                         println!("Enter number: ");
                         let mut number = String::new();
@@ -147,7 +147,7 @@ Options:
                             println!("{}", "\nDoesn't exist".red());
                         });
                         println!("{}", "Successfully deleted".bright_green());
-                    },
+                    }
                     "3" => {
                         println!("Enter email: ");
                         let mut email = String::new();
@@ -169,7 +169,6 @@ Options:
                         continue;
                     }
                 }
-
             }
             "3" => {
                 let cons = contact_book.get_contacts();
@@ -182,10 +181,7 @@ Options:
                     println!("\n{}\n", format!("{}", i).bright_green());
                 }
             }
-            &_ => println!("{}","\nNot an option".red())
+            &_ => println!("{}", "\nNot an option".red()),
         }
-
     }
-
 }
-
