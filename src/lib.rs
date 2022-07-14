@@ -58,21 +58,6 @@ impl Display for Contact {
     }
 }
 
-// impl Contact {
-//     pub fn get_formatted(&self) -> String {
-//         let formatted_string = format!(
-//             r#"
-// name: {},
-// number: {},
-// email: {}
-//             "#,
-//             self.name, self.number, self.email
-//         );
-
-//         formatted_string
-//     }
-// }
-
 impl Contact {
     pub fn new(name: String, number: u64, email: String) -> Self {
         Self {
@@ -128,13 +113,13 @@ impl ContactBook {
         }
     }
 
-    pub fn add(&mut self, con: Contact) {
-        // if self.contacts.contains(&con) {
-        //     return Err("Already Exists".to_string());
-        // }
+    pub fn add(&mut self, con: Contact) -> Result<(), String> {
+        if self.contacts.contains(&con) {
+            return Err("Already Exists".to_string());
+        }
         self.contacts.push(con);
         self.save();
-        // Ok(())
+        Ok(())
     }
 
     pub fn remove_by_name(&mut self, name: &str) -> Option<()> {
@@ -203,31 +188,31 @@ impl ContactBook {
         Some(())
     }
 
-    pub fn get_contact_by_name(&self, name: &str) -> Option<&Contact> {
+    pub fn get_contact_by_name(&self, name: &str) -> Result<&Contact, String> {
         for con in &self.contacts {
             if con.get_name() == name {
-                return Some(con);
+                return Ok(con);
             }
         }
-        None
+        return Err(String::from("Doesn't exist"));
     }
 
-    pub fn get_contact_by_number(&self, number: u64) -> Option<&Contact> {
+    pub fn get_contact_by_number(&self, number: u64) -> Result<&Contact, String> {
         for con in &self.contacts {
             if con.get_number() == number {
-                return Some(con);
+                return Ok(con);
             }
         }
-        None
+        return Err(String::from("Doesn't exist"));
     }
 
-    pub fn get_contact_by_email(&self, email: &str) -> Option<&Contact> {
+    pub fn get_contact_by_email(&self, email: &str) -> Result<&Contact, String> {
         for con in &self.contacts {
             if con.get_email() == email {
-                return Some(con);
+                return Ok(con);
             }
         }
-        None
+        return Err(String::from("Doesn't exist"));
     }
 
     pub fn save(&mut self) {
@@ -237,8 +222,6 @@ impl ContactBook {
             Ok(i) => i,
             Err(_) => (),
         }
-
-        // let mut files: Vec<fs::File> = vec![];
 
         for con in &self.contacts {
             let mut temp_data = json::object! {
@@ -257,8 +240,6 @@ impl ContactBook {
                     panic!("");
                 });
         }
-
-        // let files = get_files(&self.contact_dir);
     }
 }
 
