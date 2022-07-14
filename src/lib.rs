@@ -113,6 +113,10 @@ impl ContactBook {
         }
     }
 
+    pub fn get_contacts(&self) -> &Vec<Contact> {
+        &self.contacts
+    }
+
     pub fn add(&mut self, con: Contact) -> Result<(), String> {
         if self.contacts.contains(&con) {
             return Err("Already Exists".to_string());
@@ -293,7 +297,7 @@ pub fn file<S: Into<String>>(filename: S) -> fs::File {
         Err(error) => match error.kind() {
             io::ErrorKind::NotFound => {
                 let file = fs::File::create(&filename).unwrap_or_else(|error| {
-                    println!("{}", format!("Error: {}", error).red());
+                    println!("{}", format!("\nError: {}\n", error).red());
                     panic!("");
                 });
                 file
