@@ -1,10 +1,10 @@
 use colored::*;
 use json;
 use std::{
-    fmt::{Display},
+    fmt::Display,
     fs::{self},
     io::{self, Write},
-    path::Path
+    path::Path,
 };
 
 mod macros;
@@ -17,19 +17,19 @@ pub struct Contact {
 
 impl Clone for Contact {
     fn clone(&self) -> Self {
-        Self { 
-            name: self.name.clone(), 
-            number: self.number, 
-            email: self.email.clone() 
+        Self {
+            name: self.name.clone(),
+            number: self.number,
+            email: self.email.clone(),
         }
     }
 }
 
 impl PartialEq for Contact {
     fn eq(&self, other: &Self) -> bool {
-        if (self.name == other.get_name().to_string()
+        if self.name == other.get_name().to_string()
             && self.number == other.get_number()
-            && self.email == other.get_email().to_string())
+            && self.email == other.get_email().to_string()
         {
             true
         } else {
@@ -37,9 +37,9 @@ impl PartialEq for Contact {
         }
     }
     fn ne(&self, other: &Self) -> bool {
-        if (self.name == other.get_name().to_string()
+        if self.name == other.get_name().to_string()
             && self.number == other.get_number()
-            && self.email == other.get_email().to_string())
+            && self.email == other.get_email().to_string()
         {
             false
         } else {
@@ -97,7 +97,7 @@ impl Contact {
 
 pub struct ContactBook {
     contacts: Vec<Contact>,
-    contact_dir: String
+    contact_dir: String,
 }
 
 impl ContactBook {
@@ -106,25 +106,21 @@ impl ContactBook {
         if Path::new("contacts").is_dir() {
             if get_files("contacts").len() > 0 {
                 let files = get_files("contacts");
-                for i in files {        
-                    let contents = fs::read_to_string(
-                        format!("contacts/{}", i)
-                    ).unwrap_or_else(|error| {
-                        println!("Error: {}", format!("Error: {}", error));
-                        panic!("");
-                    });
+                for i in files {
+                    let contents =
+                        fs::read_to_string(format!("contacts/{}", i)).unwrap_or_else(|error| {
+                            println!("Error: {}", format!("Error: {}", error));
+                            panic!("");
+                        });
                     let json_contents = json::parse(&contents).unwrap();
                     let contact = Contact::new(
                         json_contents["name"].to_string(),
                         json_contents["number"].as_u64().unwrap(),
-                        json_contents["email"].to_string()
+                        json_contents["email"].to_string(),
                     );
                     contacts.push(contact);
                 }
             }
-        }
-        for i in &contacts {
-            println!("{}", i);
         }
         Self {
             contacts,
@@ -149,6 +145,13 @@ impl ContactBook {
             }
         };
 
+        let con_to_remove = self.contacts[index].clone();
+
+        remove_file(
+            &format!("{}.json", &con_to_remove.get_name()),
+            &self.contact_dir,
+        );
+
         self.contacts.remove(index);
 
         Some(())
@@ -166,6 +169,13 @@ impl ContactBook {
             }
         };
 
+        let con_to_remove = self.contacts[index].clone();
+
+        remove_file(
+            &format!("{}.json", &con_to_remove.get_name()),
+            &self.contact_dir,
+        );
+
         self.contacts.remove(index);
 
         Some(())
@@ -180,6 +190,13 @@ impl ContactBook {
             Some(i) => i,
             None => return None,
         };
+
+        let con_to_remove = self.contacts[index].clone();
+
+        remove_file(
+            &format!("{}.json", &con_to_remove.get_name()),
+            &self.contact_dir,
+        );
 
         self.contacts.remove(index);
 
@@ -221,7 +238,7 @@ impl ContactBook {
             Err(_) => (),
         }
 
-        let mut files: Vec<fs::File> = vec![];
+        // let mut files: Vec<fs::File> = vec![];
 
         for con in &self.contacts {
             let mut temp_data = json::object! {
@@ -241,7 +258,7 @@ impl ContactBook {
                 });
         }
 
-        let files = get_files(&self.contact_dir);
+        // let files = get_files(&self.contact_dir);
     }
 }
 
@@ -274,10 +291,23 @@ pub fn get_files<S: Into<String>>(dirname: S) -> Vec<String> {
     files_to_return
 }
 
+pub fn remove_file(filename: &str, path: &str) {
+    let full_path = format!("{}/{}", path, filename);
+
+    fs::remove_file(full_path).unwrap_or_else(|error| {
+        println!("{}", format!("Error: {}", error).red());
+        panic!("");
+    });
+}
+
 pub fn file<S: Into<String>>(filename: S) -> fs::File {
     let filename = filename.into();
 
-    let file = match fs::OpenOptions::new().write(true).truncate(true).open(&filename) {
+    let file = match fs::OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(&filename)
+    {
         Ok(i) => i,
         Err(error) => match error.kind() {
             io::ErrorKind::NotFound => {

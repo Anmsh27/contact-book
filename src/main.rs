@@ -1,7 +1,6 @@
 use con_book::*;
 
 fn main() {
-
     let mut book = ContactBook::new();
 
     book.add(Contact::new(
@@ -10,4 +9,11 @@ fn main() {
         "1tsvgdbhn".to_string(),
     ));
 
+    book.remove_by_name("fds");
+
+    book.add(Contact::new(
+        "Animesh".to_string(),
+        4322_u64,
+        "Animeshjoshi2007@gmail.com".to_string(),
+    ));
 }
