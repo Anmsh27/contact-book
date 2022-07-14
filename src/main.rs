@@ -38,24 +38,24 @@ Options:
                 let mut name = String::new();
                 println!("\nEnter name: ");
                 match stdin().read_line(&mut name) {
-                    Ok(i) => (),
+                    Ok(i) => i,
                     Err(error) => {
                         println!("{}", format!("Error: {}", error).red());
                         continue;
                     }
-                }
-                let mut name = name.trim().to_string();
+                };
+                let name = name.trim().to_string();
 
                 let mut number = String::new();
                 println!("Enter number: ");
                 match stdin().read_line(&mut number) {
-                    Ok(i) => (),
+                    Ok(i) => i,
                     Err(error) => {
                         println!("{}", format!("Error: {}", error).red());
                         continue;
                     }
-                }
-                let mut number = match number.trim().parse::<u64>() {
+                };
+                let number = match number.trim().parse::<u64>() {
                     Ok(i) => i,
                     Err(error) => {
                         println!("{}", format!("Error: {}", error).red());
@@ -66,13 +66,13 @@ Options:
                 let mut email = String::new();
                 println!("Enter email: ");
                 match stdin().read_line(&mut email) {
-                    Ok(i) => (),
+                    Ok(i) => i,
                     Err(error) => {
                         println!("{}", format!("Error: {}", error).red());
                         continue;
                     }
-                }
-                let mut email = email.trim().to_string();
+                };
+                let email = email.trim().to_string();
 
                 let contact = Contact::new(name, number, email);
                 match contact_book.add(contact) {
@@ -100,12 +100,12 @@ Options:
                 println!("Option: ");
 
                 match stdin().read_line(&mut input2) {
-                    Ok(i) => (),
+                    Ok(i) => i,
                     Err(error) => {
                         println!("{}", format!("\nError: {}\n", error).red());
                         continue;
                     }
-                }
+                };
 
                 let input2 = input2.trim().to_string();
 
@@ -114,12 +114,12 @@ Options:
                         println!("Enter name: ");
                         let mut name = String::new();
                         match stdin().read_line(&mut name) {
-                            Ok(i) => (),
+                            Ok(i) => i,
                             Err(error) => {
                                 println!("{}", format!("{}", error).red());
                                 continue;
                             }
-                        }
+                        };
                         let name = name.trim();
                         contact_book.remove_by_name(name).unwrap_or_else(|| {
                             println!("{}", "\nDoesn't exist".red());
@@ -130,12 +130,12 @@ Options:
                         println!("Enter number: ");
                         let mut number = String::new();
                         match stdin().read_line(&mut number) {
-                            Ok(i) => (),
+                            Ok(i) => i,
                             Err(error) => {
                                 println!("{}", format!("{}", error).red());
                                 continue;
                             }
-                        }
+                        };
                         let number = match number.trim().parse::<u64>() {
                             Ok(i) => i,
                             Err(error) => {
@@ -152,7 +152,7 @@ Options:
                         println!("Enter email: ");
                         let mut email = String::new();
                         match stdin().read_line(&mut email) {
-                            Ok(i) => (),
+                            Ok(i) => i,
                             Err(error) => {
                                 println!("{}", format!("{}", error).red());
                                 continue;
